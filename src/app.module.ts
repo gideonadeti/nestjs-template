@@ -4,7 +4,9 @@ import { ThrottlerModule } from '@nestjs/throttler';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ClerkAuthGuard } from './clerk-auth/clerk-auth.guard';
 import { LoggingMiddleware } from './logging/logging.middleware';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -19,9 +21,10 @@ import { LoggingMiddleware } from './logging/logging.middleware';
         getTracker: (req: { user: { id: string } }) => req.user?.id, // The clerkMiddleware attaches the user object to the request object
       },
     ]),
+    PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ClerkAuthGuard],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
