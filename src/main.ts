@@ -12,6 +12,7 @@ async function bootstrap() {
     .setTitle('NestJS Template')
     .setDescription('API documentation for NestJS Template')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build();
 
   const options = {
