@@ -1,7 +1,8 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 
+import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggingMiddleware } from './logging/logging.middleware';
 
@@ -11,6 +12,12 @@ import { LoggingMiddleware } from './logging/logging.middleware';
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000, // 1 minute
+        limit: 100, // 100 requests per minute for general endpoints
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],
