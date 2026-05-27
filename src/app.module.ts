@@ -16,6 +16,7 @@ import { LoggingMiddleware } from './logging/logging.middleware';
       {
         ttl: 60_000, // 1 minute
         limit: 100, // 100 requests per minute for general endpoints
+        getTracker: (req: { user: { id: string } }) => req.user?.id, // The clerkMiddleware attaches the user object to the request object
       },
     ]),
   ],
