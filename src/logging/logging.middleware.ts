@@ -16,16 +16,34 @@ export class LoggingMiddleware implements NestMiddleware {
 
     res.setHeader('x-request-id', requestId);
     const startTime = process.hrtime(); // high-resolution timer
+    const userAgent = req.header('user-agent') ?? 'unknown';
+    const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+    let hasLogged = false;
 
-    res.on('finish', () => {
+    const logRequest = (event: 'finish' | 'close') => {
+      if (hasLogged) {
+        return;
+      }
+      hasLogged = true;
+
       const { statusCode } = res;
       const [seconds, nanoseconds] = process.hrtime(startTime);
       const durationInMs = (seconds * 1e3 + nanoseconds / 1e6).toFixed(2); // milliseconds
+      const message =
+        `${protocol.toUpperCase()} ${method} ${originalUrl} ${statusCode} - ${durationInMs}ms ` +
+        `(requestId=${requestId}, ip=${clientIp}, userAgent="${userAgent}", event=${event})`;
 
-      this.logger.log(
-        `${protocol.toUpperCase()} ${method} ${originalUrl} ${statusCode} - ${durationInMs}ms (requestId=${requestId})`,
-      );
-    });
+      if (statusCode >= 500) {
+        this.logger.error(message);
+      } else if (statusCode >= 400) {
+        this.logger.warn(message);
+      } else {
+        this.logger.log(message);
+      }
+    };
+
+    res.on('finish', () => logRequest('finish'));
+    res.on('close', () => logRequest('close'));
 
     next();
   }
