@@ -9,6 +9,11 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const nodeEnv = configService.get<string>('NODE_ENV') ?? 'development';
   const isProduction = nodeEnv === 'production';
+  const frontendBaseUrl = configService.get<string>('FRONTEND_BASE_URL');
+
+  app.enableCors({
+    origin: frontendBaseUrl,
+  });
 
   app.setGlobalPrefix('api/v1');
 
