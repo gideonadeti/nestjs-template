@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      '@clerk/express':
+        specifier: ^2.1.21
+        version: 2.1.21(express@5.2.1)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.24(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -426,6 +429,37 @@ packages:
       {
         integrity: sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ==,
       }
+
+  '@clerk/backend@3.4.13':
+    resolution:
+      {
+        integrity: sha512-3BABnKE1YZpQqJ/S8QD5FpzE7jq+mgaMrO7rLiWTI8Bfs/xk11XYSp1lMEf3BTo/rzEtaUsXaVDGvccYogKapg==,
+      }
+    engines: { node: '>=20.9.0' }
+
+  '@clerk/express@2.1.21':
+    resolution:
+      {
+        integrity: sha512-dpJktiUatE/4thWXeGzSzCe2uxqHcEXTv5JPhPq3GxDIpiHfe9oTfA1/9lPN8EsOrv2tQMW+dsGYnVQZZFIvdQ==,
+      }
+    engines: { node: '>=20.9.0' }
+    peerDependencies:
+      express: ^4.17.0 || ^5.0.0
+
+  '@clerk/shared@4.13.1':
+    resolution:
+      {
+        integrity: sha512-DyUtvNHgMmqjtTM0q285jKaAXUmCDSyItiGQTt1dNL0M6DZ3bxqsJz7wXPjh9zezmU4BAnLpwhj5gsM3OuNPzA==,
+      }
+    engines: { node: '>=20.9.0' }
+    peerDependencies:
+      react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+      react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   '@colors/colors@1.5.0':
     resolution:
@@ -1177,6 +1211,18 @@ packages:
     resolution:
       {
         integrity: sha512-DsG+8/LscQIQg68J6Ef3dv10u6nVyetYn923s3/sus5eaGfTo1of5WMZSLf0UJc9KDuKPilPH0UDJCjvNbDNCA==,
+      }
+
+  '@stablelib/base64@1.0.1':
+    resolution:
+      {
+        integrity: sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ==,
+      }
+
+  '@tanstack/query-core@5.100.14':
+    resolution:
+      {
+        integrity: sha512-5X41dGpxgeaHISCRW2oYwcSycZeULZzAunaudXT9ov1KOTj9xwt0CH6hbwqP1/z74ZWF7rYFnDpyYH07XFcZew==,
       }
 
   '@tokenizer/inflate@0.4.1':
@@ -2497,6 +2543,13 @@ packages:
       }
     engines: { node: '>= 0.8' }
 
+  dequal@2.0.3:
+    resolution:
+      {
+        integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==,
+      }
+    engines: { node: '>=6' }
+
   detect-newline@3.1.0:
     resolution:
       {
@@ -2876,6 +2929,12 @@ packages:
     resolution:
       {
         integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==,
+      }
+
+  fast-sha256@1.3.0:
+    resolution:
+      {
+        integrity: sha512-n11RGP/lrWEFI/bWdygLxhI+pVeo1ZYIVwvvPkW7azl/rOy+F3HYRZ2K5zeE9mmkhQppyv9sQFx0JM9UabnpPQ==,
       }
 
   fast-uri@3.1.2:
@@ -3617,6 +3676,13 @@ packages:
     peerDependenciesMeta:
       node-notifier:
         optional: true
+
+  js-cookie@3.0.7:
+    resolution:
+      {
+        integrity: sha512-z/wZZgDrkNV1eA0ULjM/F9/50Ya8fbzgKneSpoPsXSGd0KnpdtHfOZWK+GcwLk+EZbS4F9RBhU+K2RgzuDaItw==,
+      }
+    engines: { node: '>=20' }
 
   js-tokens@4.0.0:
     resolution:
@@ -4630,12 +4696,24 @@ packages:
       }
     engines: { node: '>=10' }
 
+  standardwebhooks@1.0.0:
+    resolution:
+      {
+        integrity: sha512-BbHGOQK9olHPMvQNHWul6MYlrRTAOKn03rOe4A8O3CLWhNf4YHBqq2HJKKC+sfqpxiBY52pNeesD6jIiLDz8jg==,
+      }
+
   statuses@2.0.2:
     resolution:
       {
         integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==,
       }
     engines: { node: '>= 0.8' }
+
+  std-env@3.10.0:
+    resolution:
+      {
+        integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==,
+      }
 
   streamsearch@1.1.0:
     resolution:
@@ -5535,6 +5613,33 @@ snapshots:
 
   '@borewit/text-codec@0.2.2': {}
 
+  '@clerk/backend@3.4.13':
+    dependencies:
+      '@clerk/shared': 4.13.1
+      standardwebhooks: 1.0.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
+
+  '@clerk/express@2.1.21(express@5.2.1)':
+    dependencies:
+      '@clerk/backend': 3.4.13
+      '@clerk/shared': 4.13.1
+      express: 5.2.1
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
+
+  '@clerk/shared@4.13.1':
+    dependencies:
+      '@tanstack/query-core': 5.100.14
+      dequal: 2.0.3
+      glob-to-regexp: 0.4.1
+      js-cookie: 3.0.7
+      std-env: 3.10.0
+
   '@colors/colors@1.5.0':
     optional: true
 
@@ -6149,6 +6254,10 @@ snapshots:
   '@sinonjs/fake-timers@15.4.0':
     dependencies:
       '@sinonjs/commons': 3.0.1
+
+  '@stablelib/base64@1.0.1': {}
+
+  '@tanstack/query-core@5.100.14': {}
 
   '@tokenizer/inflate@0.4.1':
     dependencies:
@@ -6916,6 +7025,8 @@ snapshots:
 
   depd@2.0.0: {}
 
+  dequal@2.0.3: {}
+
   detect-newline@3.1.0: {}
 
   dezalgo@1.0.4:
@@ -7153,6 +7264,8 @@ snapshots:
   fast-levenshtein@2.0.6: {}
 
   fast-safe-stringify@2.1.1: {}
+
+  fast-sha256@1.3.0: {}
 
   fast-uri@3.1.2: {}
 
@@ -7781,6 +7894,8 @@ snapshots:
       - supports-color
       - ts-node
 
+  js-cookie@3.0.7: {}
+
   js-tokens@4.0.0: {}
 
   js-yaml@3.14.2:
@@ -8308,7 +8423,14 @@ snapshots:
     dependencies:
       escape-string-regexp: 2.0.0
 
+  standardwebhooks@1.0.0:
+    dependencies:
+      '@stablelib/base64': 1.0.1
+      fast-sha256: 1.3.0
+
   statuses@2.0.2: {}
+
+  std-env@3.10.0: {}
 
   streamsearch@1.1.0: {}
 

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { clerkMiddleware } from '@clerk/express';
 
 import { AppModule } from './app.module';
 
@@ -16,6 +17,7 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api/v1');
+  app.use(clerkMiddleware());
 
   if (!isProduction) {
     const config = new DocumentBuilder()
