@@ -1,5 +1,6 @@
 import { getAuth } from '@clerk/express';
 import { ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
 import { ClerkAuthGuard } from './clerk-auth.guard';
 
@@ -9,16 +10,22 @@ jest.mock('@clerk/express', () => ({
 
 describe('ClerkAuthGuard', () => {
   let guard: ClerkAuthGuard;
+  let reflector: { getAllAndOverride: jest.Mock };
 
   const createExecutionContext = (request: unknown): ExecutionContext =>
     ({
       switchToHttp: () => ({
         getRequest: () => request,
       }),
+      getHandler: () => ({}),
+      getClass: () => ({}),
     }) as ExecutionContext;
 
   beforeEach(() => {
-    guard = new ClerkAuthGuard();
+    reflector = {
+      getAllAndOverride: jest.fn().mockReturnValue(false),
+    };
+    guard = new ClerkAuthGuard(reflector as unknown as Reflector);
     jest.clearAllMocks();
   });
 
@@ -42,5 +49,13 @@ describe('ClerkAuthGuard', () => {
 
     expect(result).toBe(false);
     expect(getAuth).toHaveBeenCalledWith(request);
+  });
+
+  it('should allow request when route is public', () => {
+    reflector.getAllAndOverride.mockReturnValue(true);
+    const context = createExecutionContext({});
+    const result = guard.canActivate(context);
+    expect(result).toBe(true);
+    expect(getAuth).not.toHaveBeenCalled();
   });
 });
