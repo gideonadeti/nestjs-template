@@ -1,5 +1,5 @@
 import { getAuth, clerkClient } from '@clerk/express';
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { ClerkAuthGuard } from './clerk-auth.guard';
@@ -94,9 +94,9 @@ describe('ClerkAuthGuard', () => {
     const request = {};
     const context = createExecutionContext(request);
 
-    const result = await guard.canActivate(context);
-
-    expect(result).toBe(false);
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      UnauthorizedException,
+    );
     expect(getAuth).toHaveBeenCalledWith(request);
     expect(userFindUnique).not.toHaveBeenCalled();
   });

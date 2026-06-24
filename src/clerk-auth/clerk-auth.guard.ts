@@ -1,7 +1,13 @@
 import { Request } from 'express';
 import { clerkClient, getAuth } from '@clerk/express';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Prisma } from 'src/generated/prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { IS_PUBLIC_KEY } from 'src/public/public.decorator';
@@ -24,7 +30,7 @@ export class ClerkAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const { userId } = getAuth(request);
 
-    if (!userId) return false;
+    if (!userId) throw new UnauthorizedException();
 
     await this.ensureUserExists(userId);
 
@@ -49,12 +55,22 @@ export class ClerkAuthGuard implements CanActivate {
       throw new Error(`Clerk user ${clerkId} is missing an email address`);
     }
 
-    await this.prismaService.user.create({
-      data: {
-        id: clerkId,
-        name,
-        email,
-      },
-    });
+    try {
+      await this.prismaService.user.create({
+        data: {
+          id: clerkId,
+          name,
+          email,
+        },
+      });
+    } catch (err) {
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        return;
+      }
+      throw err;
+    }
   }
 }
