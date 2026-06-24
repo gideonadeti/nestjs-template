@@ -7,16 +7,14 @@ import { clerkMiddleware } from '@clerk/express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   const configService = app.get(ConfigService);
   const nodeEnv = configService.get<string>('NODE_ENV') ?? 'development';
   const isProduction = nodeEnv === 'production';
-  const frontendBaseUrl = configService.get<string>('FRONTEND_BASE_URL');
+  const frontendBaseUrl =
+    configService.get<string>('FRONTEND_BASE_URL') || 'http://localhost:3001';
 
-  app.enableCors({
-    origin: frontendBaseUrl,
-  });
-
+  app.enableCors({ origin: frontendBaseUrl });
   app.setGlobalPrefix('api/v1');
   app.use(clerkMiddleware());
   app.useGlobalPipes(
