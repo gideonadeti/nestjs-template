@@ -31,7 +31,7 @@ The middleware does **not** reject unauthenticated requests — it only parses w
 
 ### Guard logic (`src/clerk-auth/clerk-auth.guard.ts`)
 
-```
+```text
 request → is @Public()? → yes → allow
        → no
        → get req.auth.userId from Clerk
@@ -87,7 +87,7 @@ enum UserRole {
 
 ### RolesGuard logic (`src/roles/roles.guard.ts`)
 
-```
+```text
 request → is @Public()? → yes → allow
        → no
        → no roles required? → allow

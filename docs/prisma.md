@@ -188,7 +188,7 @@ pnpm prisma generate
 
 Ensure `DATABASE_URL` is set correctly in `.env`. The URL format is:
 
-```
+```text
 postgresql://<user>:<password>@<host>:<port>/<database>
 ```
 

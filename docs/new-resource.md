@@ -40,7 +40,7 @@ Choose **REST API** and **Y** to generate CRUD entry points.
 
 This creates:
 
-```
+```text
 src/posts/
 ├── posts.module.ts
 ├── posts.controller.ts
@@ -344,7 +344,7 @@ describe('Posts (e2e)', () => {
 
 ## Summary
 
-```
+```text
 Schema → Migrate → Scaffold → DTOs → Service → Controller → Module → Test
 ```
 
