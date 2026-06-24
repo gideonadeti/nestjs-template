@@ -32,12 +32,14 @@ describe('WebhooksService', () => {
   let prismaService: {
     user: {
       create: jest.Mock;
+      upsert: jest.Mock;
       update: jest.Mock;
       delete: jest.Mock;
       findUnique: jest.Mock;
     };
   };
   let mockUserCreate: jest.Mock;
+  let mockUserUpsert: jest.Mock;
   let mockUserUpdate: jest.Mock;
   let mockUserDelete: jest.Mock;
   let mockUserFindUnique: jest.Mock;
@@ -58,6 +60,7 @@ describe('WebhooksService', () => {
           useValue: {
             user: {
               create: jest.fn(),
+              upsert: jest.fn(),
               update: jest.fn(),
               delete: jest.fn(),
               findUnique: jest.fn(),
@@ -70,6 +73,7 @@ describe('WebhooksService', () => {
     service = module.get(WebhooksService);
     prismaService = module.get(PrismaService);
     mockUserCreate = prismaService.user.create;
+    mockUserUpsert = prismaService.user.upsert;
     mockUserUpdate = prismaService.user.update;
     mockUserDelete = prismaService.user.delete;
     mockUserFindUnique = prismaService.user.findUnique;
@@ -97,8 +101,10 @@ describe('WebhooksService', () => {
 
         await service.handleClerkWebhook(req, res);
 
-        expect(mockUserCreate).toHaveBeenCalledWith({
-          data: {
+        expect(mockUserUpsert).toHaveBeenCalledWith({
+          where: { id: 'clerk_123' },
+          update: { name: 'John Doe', email: 'john@example.com' },
+          create: {
             id: 'clerk_123',
             name: 'John Doe',
             email: 'john@example.com',

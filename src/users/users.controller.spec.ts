@@ -6,6 +6,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ClerkAuthGuard } from 'src/clerk-auth/clerk-auth.guard';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -32,10 +33,11 @@ describe('UsersController', () => {
           },
         },
         RolesGuard,
+        ClerkAuthGuard,
         { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
         {
           provide: PrismaService,
-          useValue: { user: { findUnique: jest.fn() } },
+          useValue: { user: { findUnique: jest.fn(), create: jest.fn() } },
         },
       ],
     }).compile();

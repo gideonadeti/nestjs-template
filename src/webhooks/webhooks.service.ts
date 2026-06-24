@@ -23,8 +23,10 @@ export class WebhooksService {
     const name = clerkUser.fullName!;
     const email = clerkUser.emailAddresses[0].emailAddress;
 
-    await this.prismaService.user.create({
-      data: {
+    await this.prismaService.user.upsert({
+      where: { id: userClerkId },
+      update: { name, email },
+      create: {
         id: userClerkId,
         name,
         email,
