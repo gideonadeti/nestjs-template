@@ -218,6 +218,38 @@ describe('WebhooksService', () => {
         expect(sendStatus).toHaveBeenCalledWith(400);
         expect(mockUserCreate).not.toHaveBeenCalled();
       });
+
+      it('returns 204 for unknown event types', async () => {
+        const req = mockReq();
+        const { res, sendStatus } = createMockResponse();
+
+        mockVerifyWebhook.mockResolvedValue({
+          type: 'unknown.event',
+          data: { id: 'clerk_123' },
+        });
+
+        await service.handleClerkWebhook(req, res);
+
+        expect(sendStatus).toHaveBeenCalledWith(204);
+      });
+
+      it('returns 400 when resolveClerkUser finds no email', async () => {
+        const req = mockReq();
+        const { res, sendStatus } = createMockResponse();
+
+        mockVerifyWebhook.mockResolvedValue({
+          type: 'user.created',
+          data: { id: 'clerk_123' },
+        });
+        mockGetUser.mockResolvedValue({
+          fullName: 'John Doe',
+          emailAddresses: [],
+        });
+
+        await service.handleClerkWebhook(req, res);
+
+        expect(sendStatus).toHaveBeenCalledWith(400);
+      });
     });
   });
 });

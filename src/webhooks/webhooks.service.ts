@@ -108,7 +108,7 @@ export class WebhooksService {
       } else {
         this.logger.warn(`Unknown event type: ${event.type}`);
 
-        return res.sendStatus(400);
+        return res.sendStatus(204);
       }
       return res.sendStatus(204);
     } catch (error) {
