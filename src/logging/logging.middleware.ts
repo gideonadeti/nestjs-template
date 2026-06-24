@@ -7,7 +7,8 @@ export class LoggingMiddleware implements NestMiddleware {
   private logger = new Logger(LoggingMiddleware.name);
 
   use(req: Request, res: Response, next: NextFunction) {
-    const { method, originalUrl, protocol } = req;
+    const { method, protocol } = req;
+    const urlPath = req.path;
     const requestIdHeader = req.header('x-request-id');
     const requestId =
       typeof requestIdHeader === 'string' && requestIdHeader.trim() !== ''
@@ -30,7 +31,7 @@ export class LoggingMiddleware implements NestMiddleware {
       const [seconds, nanoseconds] = process.hrtime(startTime);
       const durationInMs = (seconds * 1e3 + nanoseconds / 1e6).toFixed(2); // milliseconds
       const message =
-        `${protocol.toUpperCase()} ${method} ${originalUrl} ${statusCode} - ${durationInMs}ms ` +
+        `${protocol.toUpperCase()} ${method} ${urlPath} ${statusCode} - ${durationInMs}ms ` +
         `(requestId=${requestId}, ip=${clientIp}, userAgent="${userAgent}", event=${event})`;
 
       if (statusCode >= 500) {
