@@ -1,6 +1,6 @@
 # NestJS Template
 
-A production-ready [NestJS](https://nestjs.com/) 11 backend template with Clerk authentication, Prisma ORM, role-based access control, and a full CI/CD pipeline.
+A production-ready [NestJS](https://nestjs.com/) 11 backend template with Clerk authentication, Prisma ORM, role-based access control, and pre-commit lint-staged hooks.
 
 ## Features
 
@@ -13,8 +13,8 @@ A production-ready [NestJS](https://nestjs.com/) 11 backend template with Clerk 
 - **Logging** — Request/response logging middleware with duration, request ID, client IP, user agent
 - **Documentation** — Swagger UI at `/api/v1/documentation` (dev only), auto-generated from decorators and JSDoc
 - **Testing** — Jest unit tests (with mocked Prisma) and Supertest e2e tests
-- **CI/CD** — GitHub Actions: lint → format check → typecheck → test → build
-- **Tooling** — ESLint flat config (typescript-eslint + prettier), Husky + lint-staged pre-commit hook, Docker Compose for local PostgreSQL
+- **Git hooks** — Husky + lint-staged pre-commit hook (auto-installed on `pnpm install`)
+- **Tooling** — ESLint flat config (typescript-eslint + prettier), Docker Compose for local PostgreSQL
 
 ## Prerequisites
 
@@ -88,9 +88,8 @@ nestjs-template/
 ├── test/
 │   ├── jest-e2e.json               # E2E Jest config
 │   └── app.e2e-spec.ts
-├── .github/workflows/ci.yml        # CI pipeline
-├── .husky/                         # Git hooks (lint-staged on pre-commit)
-└── secrets/                        # Docker secrets
+├── .husky/                         # Git hooks (created on pnpm install)
+└── secrets/                        # Docker secrets (gitignored)
 ```
 
 ## Configuration

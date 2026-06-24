@@ -59,26 +59,25 @@ Upserts the user — creates if new, updates if already exists (handles retries 
 #### `user.updated`
 
 ```ts
-case 'user.updated':
-  const existing = await this.prisma.user.findUnique({ where: { id: data.id } });
-  if (existing) {
-    await this.prisma.user.update({ where: { id: data.id }, data: { name, email } });
-  }
+// existence check is handled in handleClerkWebhook before dispatch
+await this.prismaService.user.update({
+  where: { id: userClerkId },
+  data: { name, email },
+});
 ```
 
-Only updates if the user already exists locally. This prevents creating local records for Clerk users that were not auto-provisioned by `ClerkAuthGuard` (e.g. if the webhook arrives before the user's first API request).
+Only updates if the user already exists locally (the routing method checks existence before calling this handler). This prevents creating local records for Clerk users that were not auto-provisioned by `ClerkAuthGuard`.
 
 #### `user.deleted`
 
 ```ts
-case 'user.deleted':
-  const existing = await this.prisma.user.findUnique({ where: { id: data.id } });
-  if (existing) {
-    await this.prisma.user.delete({ where: { id: data.id } });
-  }
+// existence check is handled in handleClerkWebhook before dispatch
+await this.prismaService.user.delete({
+  where: { id: userClerkId },
+});
 ```
 
-Only deletes if the user exists locally. Silently skips if the user was never created locally.
+Only deletes if the user exists locally. The routing method silently skips deletion if the user was never created locally.
 
 ### Error handling
 

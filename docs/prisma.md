@@ -56,16 +56,20 @@ The generated client is output to `src/generated/prisma/` (gitignored). This dir
 ## Configuration (`prisma.config.ts`)
 
 ```ts
-import { defineConfig } from '@prisma/config';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
+import { defineConfig } from 'prisma/config';
 
-dotenv.config({ path: '.env.local' });
-dotenv.config({ path: '.env' });
+config({ path: '.env.local' });
+config({ path: '.env' });
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
-  migrations: 'prisma/migrations',
-  datasource: { url: process.env.DATABASE_URL },
+  migrations: {
+    path: 'prisma/migrations',
+  },
+  datasource: {
+    url: process.env['DATABASE_URL'],
+  },
 });
 ```
 
@@ -84,10 +88,9 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(configService: ConfigService) {
-    const pool = new Pool({
-      connectionString: configService.getOrThrow('DATABASE_URL'),
+    const adapter = new PrismaPg({
+      connectionString: configService.getOrThrow<string>('DATABASE_URL'),
     });
-    const adapter = new PrismaPg(pool);
     super({ adapter, errorFormat: 'pretty' });
   }
 
@@ -103,7 +106,7 @@ export class PrismaService
 Key points:
 
 - Uses `ConfigService` to read `DATABASE_URL` — consistent with the rest of the app
-- Creates a `pg.Pool` and wraps it in `PrismaPg` adapter
+- Creates a `PrismaPg` adapter with the connection string passed directly (no `pg.Pool` wrapper)
 - Connects on module init and disconnects on module destroy
 
 ## PrismaModule (`src/prisma/prisma.module.ts`)
