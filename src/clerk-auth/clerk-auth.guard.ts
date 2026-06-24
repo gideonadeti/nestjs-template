@@ -68,7 +68,12 @@ export class ClerkAuthGuard implements CanActivate {
         err instanceof Prisma.PrismaClientKnownRequestError &&
         err.code === 'P2002'
       ) {
-        return;
+        const created = await this.prismaService.user.findUnique({
+          where: { id: clerkId },
+          select: { id: true },
+        });
+
+        if (created) return;
       }
       throw err;
     }
