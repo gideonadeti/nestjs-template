@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { clerkMiddleware } from '@clerk/express';
@@ -18,6 +19,16 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1');
   app.use(clerkMiddleware());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   if (!isProduction) {
     const config = new DocumentBuilder()
