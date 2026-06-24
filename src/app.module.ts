@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { ClerkAuthGuard } from './clerk-auth/clerk-auth.guard';
 import { LoggingMiddleware } from './logging/logging.middleware';
 import { PrismaModule } from './prisma/prisma.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PrismaModule } from './prisma/prisma.module';
       },
     ]),
     PrismaModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, ClerkAuthGuard],
