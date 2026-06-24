@@ -1,3 +1,4 @@
+// dotenv is a devDependency (used only by Prisma CLI via this file)
 import { config } from 'dotenv';
 import { defineConfig } from 'prisma/config';
 

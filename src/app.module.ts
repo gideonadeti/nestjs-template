@@ -20,7 +20,8 @@ import { WebhooksModule } from './webhooks/webhooks.module';
       {
         ttl: 60_000, // 1 minute
         limit: 100, // 100 requests per minute for general endpoints
-        getTracker: (req: { user: { id: string } }) => req.user?.id, // The clerkMiddleware attaches the user object to the request object
+        getTracker: (req: { user: { id: string }; ip: string }) =>
+          req.user?.id ?? req.ip,
       },
     ]),
     PrismaModule,

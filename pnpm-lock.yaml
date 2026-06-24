@@ -40,9 +40,6 @@ importers:
       class-validator:
         specifier: ^0.15.1
         version: 0.15.1
-      dotenv:
-        specifier: ^17.4.2
-        version: 17.4.2
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -77,6 +74,9 @@ importers:
       '@types/supertest':
         specifier: ^7.0.0
         version: 7.2.0
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       eslint:
         specifier: ^9.18.0
         version: 9.39.4(jiti@2.7.0)
