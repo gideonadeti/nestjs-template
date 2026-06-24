@@ -7,7 +7,7 @@ A production-ready [NestJS](https://nestjs.com/) 11 backend template with Clerk 
 - **Authentication** — Clerk-powered via `@clerk/express` with global middleware, configurable guards, and auto-provisioning of local user records on first sign-in
 - **Authorization** — Role-based access control with `@Roles()` decorator and `RolesGuard` (`USER` / `ADMIN` roles)
 - **Database** — Prisma v7 with PostgreSQL via `@prisma/adapter-pg`, auto-generated typed client, migration workflow
-- **REST API** — Global `/api/v1` prefix, full CRUD scaffold for users, `ValidationPipe` with whitelist/transform
+- **REST API** — Global `/api/v1` prefix, full CRUD scaffold for users, `ValidationPipe` with whitelist/transform (with implicit conversion)
 - **Webhooks** — Clerk webhook handler for `user.created` / `user.updated` / `user.deleted` events with signature verification
 - **Rate Limiting** — `@nestjs/throttler`, 100 requests/min per user
 - **Logging** — Request/response logging middleware with duration, request ID, client IP, user agent
