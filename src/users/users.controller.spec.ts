@@ -1,8 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Reflector } from '@nestjs/core';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -27,6 +30,12 @@ describe('UsersController', () => {
             update: jest.fn(),
             remove: jest.fn(),
           },
+        },
+        RolesGuard,
+        { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
+        {
+          provide: PrismaService,
+          useValue: { user: { findUnique: jest.fn() } },
         },
       ],
     }).compile();
