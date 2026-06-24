@@ -17,11 +17,23 @@ export class WebhooksService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
-  private async handleUserCreated(userClerkId: string) {
+  private async resolveClerkUser(userClerkId: string) {
     const clerkUser = await clerkClient.users.getUser(userClerkId);
 
-    const name = clerkUser.fullName!;
-    const email = clerkUser.emailAddresses[0].emailAddress;
+    const name = clerkUser.fullName ?? clerkUser.username ?? 'Anonymous';
+    const email =
+      clerkUser.primaryEmailAddress?.emailAddress ??
+      clerkUser.emailAddresses?.[0]?.emailAddress;
+
+    if (!email) {
+      throw new Error(`Clerk user ${userClerkId} is missing an email address`);
+    }
+
+    return { name, email };
+  }
+
+  private async handleUserCreated(userClerkId: string) {
+    const { name, email } = await this.resolveClerkUser(userClerkId);
 
     await this.prismaService.user.upsert({
       where: { id: userClerkId },
@@ -37,9 +49,7 @@ export class WebhooksService {
   }
 
   private async handleUserUpdated(userClerkId: string) {
-    const clerkUser = await clerkClient.users.getUser(userClerkId);
-    const name = clerkUser.fullName!;
-    const email = clerkUser.emailAddresses[0].emailAddress;
+    const { name, email } = await this.resolveClerkUser(userClerkId);
 
     await this.prismaService.user.update({
       where: { id: userClerkId },
@@ -95,6 +105,10 @@ export class WebhooksService {
         } else {
           await this.handleUserDeleted(userClerkId);
         }
+      } else {
+        this.logger.warn(`Unknown event type: ${event.type}`);
+
+        return res.sendStatus(400);
       }
       return res.sendStatus(204);
     } catch (error) {
