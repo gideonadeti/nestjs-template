@@ -1,14 +1,13 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
   private logger = new Logger(LoggingMiddleware.name);
 
-  use(req: Request, res: Response, next: NextFunction) {
-    const { method, protocol } = req;
-    const urlPath = req.path;
+  async use(req: Request, res: Response, next: NextFunction) {
+    const { method, originalUrl, protocol } = req;
     const requestIdHeader = req.header('x-request-id');
     const requestId =
       typeof requestIdHeader === 'string' && requestIdHeader.trim() !== ''
@@ -16,35 +15,31 @@ export class LoggingMiddleware implements NestMiddleware {
         : randomUUID();
 
     res.setHeader('x-request-id', requestId);
-    const startTime = process.hrtime(); // high-resolution timer
-    const userAgent = req.header('user-agent') ?? 'unknown';
-    const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
-    let hasLogged = false;
 
-    const logRequest = (event: 'finish' | 'close') => {
-      if (hasLogged) {
-        return;
+    if (process.env['SENTRY_DSN']) {
+      try {
+        const { getIsolationScope } = (await import('@sentry/nestjs')) as {
+          getIsolationScope: () => {
+            setTag: (key: string, value: string) => void;
+          };
+        };
+        getIsolationScope().setTag('requestId', requestId);
+      } catch {
+        // @sentry/nestjs not installed — Sentry integration skipped
       }
-      hasLogged = true;
+    }
 
+    const startTime = process.hrtime();
+
+    res.on('finish', () => {
       const { statusCode } = res;
       const [seconds, nanoseconds] = process.hrtime(startTime);
-      const durationInMs = (seconds * 1e3 + nanoseconds / 1e6).toFixed(2); // milliseconds
-      const message =
-        `${protocol.toUpperCase()} ${method} ${urlPath} ${statusCode} - ${durationInMs}ms ` +
-        `(requestId=${requestId}, ip=${clientIp}, userAgent="${userAgent}", event=${event})`;
+      const durationInMs = (seconds * 1e3 + nanoseconds / 1e6).toFixed(2);
 
-      if (statusCode >= 500) {
-        this.logger.error(message);
-      } else if (statusCode >= 400) {
-        this.logger.warn(message);
-      } else {
-        this.logger.log(message);
-      }
-    };
-
-    res.on('finish', () => logRequest('finish'));
-    res.on('close', () => logRequest('close'));
+      this.logger.log(
+        `${protocol.toUpperCase()} ${method} ${originalUrl} ${statusCode} - ${durationInMs}ms (requestId=${requestId})`,
+      );
+    });
 
     next();
   }
