@@ -29,15 +29,17 @@ A production-ready [NestJS](https://nestjs.com/) 11 backend template with Clerk 
 # 1. Install dependencies
 pnpm install
 
-# 2. Configure environment variables
+# 2. Set up Docker secrets
+cp secrets/postgres_password.txt.example secrets/postgres_password.txt
+# Edit secrets/postgres_password.txt with your desired PostgreSQL password
+
+# 3. Configure environment variables
 cp .env.local.example .env.local
-# Edit .env.local with your Clerk keys from https://dashboard.clerk.com
+# Edit .env.local with your Clerk keys from https://dashboard.clerk.com and
+# ensure DATABASE_URL matches the password set in step 2
 
-# 3. Start PostgreSQL via Docker
+# 4. Start PostgreSQL via Docker
 docker compose up -d
-
-# 4. Create .env with DATABASE_URL
-echo 'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/nestjs-template"' > .env
 
 # 5. Run database migrations
 pnpm prisma migrate dev
@@ -47,6 +49,39 @@ pnpm start:dev
 ```
 
 The API is now available at `http://localhost:3000/api/v1`. Swagger docs at `http://localhost:3000/api/v1/documentation`.
+
+## Docker setup
+
+The project uses [Docker Compose](compose.yaml) to run PostgreSQL with [Docker secrets](https://docs.docker.com/compose/use-secrets/) for secure credential management.
+
+```yaml
+# compose.yaml (relevant excerpt)
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: nestjs-template
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+```
+
+### Secrets
+
+| File                                    | Purpose                                 |
+| --------------------------------------- | --------------------------------------- |
+| `secrets/postgres_password.txt`         | Actual PostgreSQL password (gitignored) |
+| `secrets/postgres_password.txt.example` | Template with a placeholder value       |
+
+1. Copy the example to create your secret file: `cp secrets/postgres_password.txt.example secrets/postgres_password.txt`
+2. Edit the password to your desired value
+3. Ensure the `DATABASE_URL` in `.env.local` uses the same password — e.g. `postgresql://postgres:your-password-here@localhost:5432/nestjs-template`
+
+> **Note:** The `secrets/` directory is gitignored. Only the `*.example` file is tracked in version control.
 
 ## Project structure
 
@@ -89,7 +124,7 @@ nestjs-template/
 │   ├── jest-e2e.json               # E2E Jest config
 │   └── app.e2e-spec.ts
 ├── .husky/                         # Git hooks (created on pnpm install)
-└── secrets/                        # Docker secrets (gitignored)
+└── secrets/                        # Docker secrets (gitignored, see secrets/*.txt.example)
 ```
 
 ## Configuration

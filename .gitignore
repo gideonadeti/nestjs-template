@@ -144,4 +144,5 @@ vite.config.ts.timestamp-*
 .vite/
 
 /src/generated/prisma
-secrets/
+secrets/*
+!secrets/*.example
