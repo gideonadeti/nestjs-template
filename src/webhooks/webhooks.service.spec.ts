@@ -4,7 +4,7 @@ import { clerkClient } from '@clerk/express';
 import { verifyWebhook } from '@clerk/express/webhooks';
 
 import { WebhooksService } from './webhooks.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 jest.mock('@clerk/express', () => ({
   clerkClient: {

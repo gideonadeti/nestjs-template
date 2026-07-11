@@ -3,7 +3,7 @@ import { clerkClient } from '@clerk/express';
 import { verifyWebhook } from '@clerk/express/webhooks';
 import { Request, Response } from 'express';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 const supportedClerkEvents = {
   userCreated: 'user.created',

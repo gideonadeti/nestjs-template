@@ -4,8 +4,8 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 
 import { UserRole } from '../generated/prisma/enums.js';
-import { IS_PUBLIC_KEY } from 'src/public/public.decorator';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { IS_PUBLIC_KEY } from '../public/public.decorator';
+import { PrismaService } from '../prisma/prisma.service';
 import { ROLES_KEY } from './roles.decorator';
 
 @Injectable()

@@ -3,7 +3,7 @@ import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { ClerkAuthGuard } from './clerk-auth.guard';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 jest.mock('@clerk/express', () => ({
   getAuth: jest.fn(),

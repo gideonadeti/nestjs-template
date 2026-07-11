@@ -12,10 +12,10 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { ClerkAuthGuard } from 'src/clerk-auth/clerk-auth.guard';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { Roles } from 'src/roles/roles.decorator';
-import { UserRole } from 'src/generated/prisma/enums';
+import { ClerkAuthGuard } from '../clerk-auth/clerk-auth.guard';
+import { RolesGuard } from '../roles/roles.guard';
+import { Roles } from '../roles/roles.decorator';
+import { UserRole } from '../generated/prisma/enums';
 
 @UseGuards(ClerkAuthGuard, RolesGuard)
 @Controller('users')

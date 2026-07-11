@@ -4,8 +4,8 @@ import { ExecutionContext } from '@nestjs/common';
 import { getAuth } from '@clerk/express';
 
 import { RolesGuard } from './roles.guard';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { IS_PUBLIC_KEY } from 'src/public/public.decorator';
+import { PrismaService } from '../prisma/prisma.service';
+import { IS_PUBLIC_KEY } from '../public/public.decorator';
 import { UserRole } from '../generated/prisma/enums.js';
 import { ROLES_KEY } from './roles.decorator';
 

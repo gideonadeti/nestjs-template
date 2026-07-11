@@ -7,10 +7,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Prisma } from 'src/generated/prisma/client';
+import { Prisma } from '../generated/prisma/client';
 
-import { PrismaService } from 'src/prisma/prisma.service';
-import { IS_PUBLIC_KEY } from 'src/public/public.decorator';
+import { PrismaService } from '../prisma/prisma.service';
+import { IS_PUBLIC_KEY } from '../public/public.decorator';
 
 @Injectable()
 export class ClerkAuthGuard implements CanActivate {

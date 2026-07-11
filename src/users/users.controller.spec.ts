@@ -4,9 +4,9 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { ClerkAuthGuard } from 'src/clerk-auth/clerk-auth.guard';
+import { RolesGuard } from '../roles/roles.guard';
+import { PrismaService } from '../prisma/prisma.service';
+import { ClerkAuthGuard } from '../clerk-auth/clerk-auth.guard';
 
 describe('UsersController', () => {
   let controller: UsersController;
