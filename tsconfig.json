@@ -20,6 +20,7 @@
     "noImplicitAny": true,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "strictPropertyInitialization": false
   }
 }
