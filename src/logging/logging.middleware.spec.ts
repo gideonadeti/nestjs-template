@@ -1,4 +1,4 @@
-import { LoggingMiddleware } from './logging.middleware';
+import { LoggingMiddleware } from './logging.middleware.js';
 import type { Request, Response, NextFunction } from 'express';
 
 describe('LoggingMiddleware', () => {
@@ -12,70 +12,52 @@ describe('LoggingMiddleware', () => {
     expect(middleware).toBeDefined();
   });
 
-  it('should call next() and register finish listener', async () => {
+  it('should call next()', () => {
     const req = {
-      method: 'GET',
-      originalUrl: '/test',
-      protocol: 'http',
-      header: jest.fn().mockReturnValue(undefined),
+      id: undefined,
     } as unknown as Request;
 
-    const onSpy = jest.fn();
-    const setHeaderSpy = jest.fn();
     const res = {
-      setHeader: setHeaderSpy,
-      on: onSpy,
-      statusCode: 200,
+      setHeader: jest.fn(),
     } as unknown as Response;
 
     const next = jest.fn() as NextFunction;
 
-    await middleware.use(req, res, next);
+    middleware.use(req, res, next);
 
     expect(next).toHaveBeenCalledTimes(1);
-    expect(onSpy).toHaveBeenCalledWith('finish', expect.any(Function));
   });
 
-  it('should set x-request-id header when none is provided', async () => {
+  it('should set x-request-id header from req.id', () => {
     const req = {
-      method: 'GET',
-      originalUrl: '/test',
-      protocol: 'http',
-      header: jest.fn().mockReturnValue(undefined),
+      id: 'test-request-id',
     } as unknown as Request;
 
     const setHeaderSpy = jest.fn();
     const res = {
       setHeader: setHeaderSpy,
-      on: jest.fn(),
-      statusCode: 200,
     } as unknown as Response;
 
-    await middleware.use(req, res, jest.fn());
+    middleware.use(req, res, jest.fn());
 
     expect(setHeaderSpy).toHaveBeenCalledWith(
       'x-request-id',
-      expect.any(String),
+      'test-request-id',
     );
   });
 
-  it('should preserve an existing x-request-id header', async () => {
+  it('should set empty x-request-id header when req.id is undefined', () => {
     const req = {
-      method: 'GET',
-      originalUrl: '/test',
-      protocol: 'http',
-      header: jest.fn().mockReturnValue('existing-id'),
+      id: undefined,
     } as unknown as Request;
 
     const setHeaderSpy = jest.fn();
     const res = {
       setHeader: setHeaderSpy,
-      on: jest.fn(),
-      statusCode: 200,
     } as unknown as Response;
 
-    await middleware.use(req, res, jest.fn());
+    middleware.use(req, res, jest.fn());
 
-    expect(setHeaderSpy).toHaveBeenCalledWith('x-request-id', 'existing-id');
+    expect(setHeaderSpy).toHaveBeenCalledWith('x-request-id', '');
   });
 });
