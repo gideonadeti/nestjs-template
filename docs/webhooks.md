@@ -9,7 +9,7 @@ The webhook endpoint at `POST /api/v1/webhooks/clerk` receives events from Clerk
 ## Configuration
 
 1. In your [Clerk Dashboard](https://dashboard.clerk.com/), go to **Webhooks** and add an endpoint pointing to `https://your-domain.com/api/v1/webhooks/clerk`
-2. Copy the **Signing Secret** and set it as `CLERK_WEBHOOK_SECRET` in your `.env.local`
+2. Copy the **Signing Secret** and set it as `CLERK_WEBHOOK_SIGNING_SECRET` in your `.env.local`
 3. Subscribe to the following events: `user.created`, `user.updated`, `user.deleted`
 
 ---
@@ -39,7 +39,7 @@ The endpoint uses `@SkipThrottle()` so it bypasses rate limiting.
 
 ### Signature verification
 
-Incoming webhooks are verified using `verifyWebhook` from `@clerk/express/webhooks`. The signing secret is read from `CLERK_WEBHOOK_SECRET` via `ConfigService`. If verification fails, the request is rejected with `400`.
+Incoming webhooks are verified using `verifyWebhook` from `@clerk/express/webhooks`. The signing secret is read from the `CLERK_WEBHOOK_SIGNING_SECRET` environment variable. If verification fails, the request is rejected with `400`.
 
 ### Event types
 

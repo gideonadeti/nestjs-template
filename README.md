@@ -10,7 +10,7 @@ A production-ready [NestJS](https://nestjs.com/) 11 backend template with Clerk 
 - **REST API** — Global `/api/v1` prefix, full CRUD scaffold for users, `ValidationPipe` with whitelist/transform (with implicit conversion)
 - **Webhooks** — Clerk webhook handler for `user.created` / `user.updated` / `user.deleted` events with signature verification
 - **Rate Limiting** — `@nestjs/throttler`, 100 requests/min per user
-- **Logging** — Request/response logging middleware with duration, request ID, client IP, user agent
+- **Logging** — Structured JSON logging with `nestjs-pino`, request/response auto-logging, request ID propagation, sensitive header redaction, and a global exception filter
 - **Documentation** — Swagger UI at `/api/v1/documentation` (dev only), auto-generated from decorators and JSDoc
 - **Testing** — Jest unit tests (with mocked Prisma) and Supertest e2e tests
 - **Git hooks** — Husky + lint-staged pre-commit hook (auto-installed on `pnpm install`)
@@ -105,7 +105,10 @@ nestjs-template/
 │   │   ├── roles.decorator.ts      # @Roles() — require specific roles
 │   │   └── roles.guard.ts          # Roles authorization guard
 │   ├── logging/
-│   │   └── logging.middleware.ts   # Request/response logging
+│   │   ├── pino.config.ts         # Pino configuration (structured JSON, redaction, serializers)
+│   │   └── logging.middleware.ts  # Request ID propagation to response header
+│   ├── filters/
+│   │   └── global-exception.filter.ts # Global exception filter with Prisma error translation
 │   ├── prisma/
 │   │   ├── prisma.module.ts        # Global Prisma module
 │   │   └── prisma.service.ts       # PrismaClient with adapter-pg
@@ -131,14 +134,14 @@ nestjs-template/
 
 The template uses two env files loaded in order: `.env.local` (local overrides, gitignored) then `.env` (shared defaults, gitignored). Copy the example file to get started:
 
-| Variable                | Required | Default                 | Description                                                                                         |
-| ----------------------- | -------- | ----------------------- | --------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`          | Yes      | —                       | PostgreSQL connection string (e.g. `postgresql://postgres:postgres@localhost:5432/nestjs-template`) |
-| `CLERK_PUBLISHABLE_KEY` | Yes      | —                       | Clerk publishable API key                                                                           |
-| `CLERK_SECRET_KEY`      | Yes      | —                       | Clerk secret API key                                                                                |
-| `CLERK_WEBHOOK_SECRET`  | No       | —                       | Clerk webhook signing secret (required for webhook verification)                                    |
-| `FRONTEND_BASE_URL`     | No       | `http://localhost:3001` | Allowed CORS origin                                                                                 |
-| `PORT`                  | No       | `3000`                  | Application port                                                                                    |
+| Variable                       | Required | Default                 | Description                                                                                         |
+| ------------------------------ | -------- | ----------------------- | --------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                 | Yes      | —                       | PostgreSQL connection string (e.g. `postgresql://postgres:postgres@localhost:5432/nestjs-template`) |
+| `CLERK_PUBLISHABLE_KEY`        | Yes      | —                       | Clerk publishable API key                                                                           |
+| `CLERK_SECRET_KEY`             | Yes      | —                       | Clerk secret API key                                                                                |
+| `CLERK_WEBHOOK_SIGNING_SECRET` | No       | —                       | Clerk webhook signing secret (required for webhook verification)                                    |
+| `FRONTEND_BASE_URL`            | No       | `http://localhost:3001` | Allowed CORS origin                                                                                 |
+| `PORT`                         | No       | `3000`                  | Application port                                                                                    |
 
 ## Scripts
 

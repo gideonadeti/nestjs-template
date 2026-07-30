@@ -13,15 +13,15 @@
 
 Ensure these variables are set in production:
 
-| Variable                | Required | Notes                                   |
-| ----------------------- | -------- | --------------------------------------- |
-| `DATABASE_URL`          | Yes      | Production PostgreSQL connection string |
-| `CLERK_PUBLISHABLE_KEY` | Yes      | From Clerk Dashboard → API Keys         |
-| `CLERK_SECRET_KEY`      | Yes      | From Clerk Dashboard → API Keys         |
-| `CLERK_WEBHOOK_SECRET`  | Yes\*    | Required only if using Clerk webhooks   |
-| `FRONTEND_BASE_URL`     | Yes      | Your frontend domain (CORS origin)      |
-| `PORT`                  | No       | Defaults to `3000`                      |
-| `NODE_ENV`              | No       | Set to `production` to disable Swagger  |
+| Variable                       | Required | Notes                                   |
+| ------------------------------ | -------- | --------------------------------------- |
+| `DATABASE_URL`                 | Yes      | Production PostgreSQL connection string |
+| `CLERK_PUBLISHABLE_KEY`        | Yes      | From Clerk Dashboard → API Keys         |
+| `CLERK_SECRET_KEY`             | Yes      | From Clerk Dashboard → API Keys         |
+| `CLERK_WEBHOOK_SIGNING_SECRET` | Yes\*    | Required only if using Clerk webhooks   |
+| `FRONTEND_BASE_URL`            | Yes      | Your frontend domain (CORS origin)      |
+| `PORT`                         | No       | Defaults to `3000`                      |
+| `NODE_ENV`                     | No       | Set to `production` to disable Swagger  |
 
 \* Only needed if you use Clerk webhooks. Without it, the webhook endpoint will reject requests with signature verification errors.
 
