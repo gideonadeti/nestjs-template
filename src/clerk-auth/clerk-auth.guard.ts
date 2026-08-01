@@ -7,7 +7,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Prisma } from '../generated/prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { IS_PUBLIC_KEY } from '../public/public.decorator';
@@ -55,27 +54,14 @@ export class ClerkAuthGuard implements CanActivate {
       throw new Error(`Clerk user ${clerkId} is missing an email address`);
     }
 
-    try {
-      await this.prismaService.user.create({
-        data: {
-          id: clerkId,
-          name,
-          email,
-        },
-      });
-    } catch (err) {
-      if (
-        err instanceof Prisma.PrismaClientKnownRequestError &&
-        err.code === 'P2002'
-      ) {
-        const created = await this.prismaService.user.findUnique({
-          where: { id: clerkId },
-          select: { id: true },
-        });
-
-        if (created) return;
-      }
-      throw err;
-    }
+    await this.prismaService.user.upsert({
+      where: { id: clerkId },
+      update: {},
+      create: {
+        id: clerkId,
+        name,
+        email,
+      },
+    });
   }
 }

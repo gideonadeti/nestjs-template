@@ -20,7 +20,7 @@ describe('ClerkAuthGuard', () => {
   let guard: ClerkAuthGuard;
   let mockReflector: { getAllAndOverride: jest.Mock };
   let userFindUnique: jest.Mock;
-  let userCreate: jest.Mock;
+  let userUpsert: jest.Mock;
 
   const createExecutionContext = (request: unknown): ExecutionContext =>
     ({
@@ -33,12 +33,12 @@ describe('ClerkAuthGuard', () => {
 
   beforeEach(() => {
     userFindUnique = jest.fn();
-    userCreate = jest.fn();
+    userUpsert = jest.fn();
     mockReflector = { getAllAndOverride: jest.fn().mockReturnValue(false) };
 
     guard = new ClerkAuthGuard(
       {
-        user: { findUnique: userFindUnique, create: userCreate },
+        user: { findUnique: userFindUnique, upsert: userUpsert },
       } as unknown as PrismaService,
       mockReflector as unknown as Reflector,
     );
@@ -80,8 +80,10 @@ describe('ClerkAuthGuard', () => {
     const result = await guard.canActivate(context);
 
     expect(result).toBe(true);
-    expect(userCreate).toHaveBeenCalledWith({
-      data: {
+    expect(userUpsert).toHaveBeenCalledWith({
+      where: { id: 'user_123' },
+      update: {},
+      create: {
         id: 'user_123',
         name: 'John Doe',
         email: 'john@example.com',
